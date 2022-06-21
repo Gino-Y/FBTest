@@ -90,7 +90,21 @@ class Code(Base):
 
 
 # 初始化数据库连接:
-engine = create_engine('mysql+pymysql://root:123456@127.0.0.1:3306/finalbase?charset=utf8', echo=True)
+
+HOST = '47.241.35.150'
+PORT = '3306'
+DATABASE = 'finalbase'
+USERNAME = 'root'
+PASSWORD = 'Kadfgo53254G'
+
+DB_URI = "mysql+pymysql://{username}:{password}@{host}:{port}/{db}?charset=utf8".format(username=USERNAME,
+                                                                                        password=PASSWORD,
+                                                                                        host=HOST,
+                                                                                        port=PORT,
+                                                                                        db=DATABASE)
+
+engine = create_engine(DB_URI, echo=True)
+# engine = create_engine('mysql+pymysql://root:123456@47.241.35.150:3306/finalbase?charset=utf8', echo=True)
 # 创建DBSession类型:
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
