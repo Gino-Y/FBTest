@@ -1,0 +1,30 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7983050",
+      "name": "房",
+      "font_class": "fang",
+      "unicode": "e68b",
+      "unicode_decimal": 59019
+    },
+    {
+      "icon_id": "11357644",
+      "name": "水",
+      "font_class": "shui",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "15006357",
+      "name": "电",
+      "font_class": "dian",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    }
+  ]
+}
