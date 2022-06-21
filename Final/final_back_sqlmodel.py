@@ -28,7 +28,7 @@ class UserLive(Base):
 class ElectricityFees(Base):
     __tablename__ = 'electricity_fees'
     ef_id = Column(Integer, primary_key=True)
-    ef_user_id = Column(Integer)
+    ef_user_id = Column(BigInteger)
     ef_date = Column(String(20))
     ef_num = Column(Integer)
     ef_pay = Column(Integer)
@@ -39,7 +39,7 @@ class ElectricityFees(Base):
 class WaterFees(Base):
     __tablename__ = 'water_fees'
     wa_id = Column(Integer, primary_key=True)
-    wa_user_id = Column(Integer)
+    wa_user_id = Column(BigInteger)
     wa_date = Column(String(20))
     wa_num = Column(Integer)
     wa_pay = Column(Integer)
@@ -50,7 +50,7 @@ class WaterFees(Base):
 class PropertyFees(Base):
     __tablename__ = 'property_fees'
     pr_id = Column(Integer, primary_key=True)
-    pr_user_id = Column(Integer)
+    pr_user_id = Column(BigInteger)
     pr_date = Column(String(20))
     pr_pay = Column(Integer)
     pr_hadpay = Column(Integer)
