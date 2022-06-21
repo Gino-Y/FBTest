@@ -30,9 +30,12 @@ app.add_middleware(
 @app.get("/sendcode", tags=["用户(app端)"], summary="验证码发送")
 async def sendcode(tele):
     nums = math.floor(1e5 * random.random())
-    client = smslicent.ZhenziSmsClient('https://sms_developer.zhenzikj.com', "108024",
+    client = smslicent.ZhenziSmsClient('https://sms_developer.zhenzikj.com',
+                                       "108024",
                                        "3874ba7b-fe47-46bd-b362-b18f6ef92b2d")
-    params = {'number': tele, 'templateId': '3612', 'templateParams': [str(nums)]}
+    params = {'number': tele,
+              'templateId': '3612',
+              'templateParams': [str(nums)]}
     data = final_back_sqlmodel.session.query(final_back_sqlmodel.Code).filter(
         final_back_sqlmodel.Code.tele == tele).all()
     final_back_sqlmodel.session.commit()
@@ -777,7 +780,7 @@ async def chartdata():
         ret = []
         for i in range(INSPECT_MONTH):
             ret.append((t - relativedelta(months=i)).strftime("%Y-%m"))
-        return ret
+        return ret[::-1]
 
     def generate_efoutput(raw_data):
         months = generate_months()
