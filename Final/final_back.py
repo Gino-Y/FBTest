@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 
-@app.get("/sendcode", tags=["用户(app端)"], summary="验证码发送")
+@app.get("/sendcode", tags=["用户", 'app', '用户/app'], summary="验证码发送/app")
 async def sendcode(tele):
     nums = math.floor(1e5 * random.random())
     client = smslicent.ZhenziSmsClient('https://sms_developer.zhenzikj.com',
@@ -53,7 +53,7 @@ async def sendcode(tele):
         return result
 
 
-@app.get("/codelogin", tags=["用户(app端)"], summary="验证码登录")
+@app.get("/codelogin", tags=["用户", 'app', '用户/app'], summary="验证码登录/app")
 async def codelogin(tele: int, code: str):
     a = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == tele).all()
@@ -74,7 +74,7 @@ async def codelogin(tele: int, code: str):
             return json.loads('{"msg":"此账号审核未通过"}')
 
 
-@app.get("/liverlogin", tags=["用户(app端)"], summary="用户密码登录")
+@app.get("/liverlogin", tags=["用户", 'app', '用户/app'], summary="用户密码登录/app")
 async def userlogin(username: int, pwd: str):
     a = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == username).all()
@@ -93,7 +93,7 @@ async def userlogin(username: int, pwd: str):
             return json.loads('{"msg":"此账号审核未通过"}')
 
 
-@app.get("/pclogin", tags=["用户操作"], summary="后台管理员登录")
+@app.get("/pclogin", tags=["用户", 'PC', '用户/app'], summary="后台管理员登录/PC")
 async def pclogin(username: str, password: str):
     data = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLogin).filter(
         final_back_sqlmodel.UserLogin.username == username).all()
@@ -107,7 +107,7 @@ async def pclogin(username: str, password: str):
             return json.loads('{"code":1,"msg":"密码错误"}')
 
 
-@app.post("/addliver", tags=["用户(app端)"], summary="用户注册")
+@app.post("/addliver", tags=["用户", 'app', '用户/app'], summary="用户注册/app")
 async def addliver(args: final_back_postmodel.UserLive):
     try:
         final_back_sqlmodel.session.add(final_back_sqlmodel.UserLive(user_name=args.uname,
@@ -125,7 +125,7 @@ async def addliver(args: final_back_postmodel.UserLive):
         return json.loads('{"code":0,"msg":"手机号已经被注册"}')
 
 
-@app.post("/delliver", tags=["用户操作"], summary="删除用户")
+@app.post("/delliver", tags=["用户", 'PC', '用户/PC'], summary="删除用户/PC")
 async def delliver(item: final_back_postmodel.UserLive):
     final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == item.utele).delete()
@@ -133,7 +133,7 @@ async def delliver(item: final_back_postmodel.UserLive):
     return json.loads('{"code":"0","msg":"删除成功"}')
 
 
-@app.post("/updliver", tags=["用户操作"], summary="修改用户")
+@app.post("/updliver", tags=["用户", 'PC', '用户/PC'], summary="修改用户/PC")
 async def updliver(item: final_back_postmodel.UserLive):
     final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == item.utele).update(
@@ -148,7 +148,7 @@ async def updliver(item: final_back_postmodel.UserLive):
     return json.loads('{"code":"0","msg":"修改成功"}')
 
 
-@app.get("/condliver", tags=["用户操作"], summary="条件查询用户")
+@app.get("/condliver", tags=["用户", 'PC', '用户/PC'], summary="条件查询用户/PC")
 async def condliver(page_index: int, uname: str = Query(None, min_length=0), utele: str = Query(None, min_length=0),
                     utime: str = Query(None, min_length=0), ustatue: str = Query(None, min_length=0)):
     json = []
@@ -166,8 +166,8 @@ async def condliver(page_index: int, uname: str = Query(None, min_length=0), ute
     final_back_sqlmodel.session.commit()
     thisdata = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive.user_name,
                                                  final_back_sqlmodel.UserLive.user_tele,
-                                                 final_back_sqlmodel.UserLive.user_time
-                                                 , final_back_sqlmodel.UserLive.user_build,
+                                                 final_back_sqlmodel.UserLive.user_time,
+                                                 final_back_sqlmodel.UserLive.user_build,
                                                  final_back_sqlmodel.UserLive.user_measure,
                                                  final_back_sqlmodel.UserLive.user_statue).filter(
         final_back_sqlmodel.text(fil)).limit(2).offset((page_index - 1) * 2).all()
@@ -185,7 +185,7 @@ async def condliver(page_index: int, uname: str = Query(None, min_length=0), ute
     return jsondata2
 
 
-@app.post("/addwaterfee", tags=["水费操作"], summary="录入水费（pc端）")
+@app.post("/addwaterfee", tags=["水费操作", 'PC', '水费操作/PC'], summary="录入水费（pc端）")
 async def addwaterfee(args: final_back_postmodel.WaFree, ard: final_back_postmodel.UserLive):
     a = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == ard.utele).all()
@@ -212,7 +212,7 @@ async def addwaterfee(args: final_back_postmodel.WaFree, ard: final_back_postmod
             return json.loads('{"code":"1","msg":"此账号审核未通过"}')
 
 
-@app.post("/updwafee", tags=["水费操作"], summary="修改水费（pc端）")
+@app.post("/updwafee", tags=["水费操作", 'PC', '水费操作/PC'], summary="修改水费（pc端）")
 async def updwafee(args: final_back_postmodel.WaFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.WaterFees).filter(
         final_back_sqlmodel.WaterFees.wa_id == args.wfid).update({final_back_sqlmodel.WaterFees.wa_num: args.wfnum})
@@ -220,7 +220,7 @@ async def updwafee(args: final_back_postmodel.WaFree):
     return json.loads('{"code":"0","msg":"修改成功"}')
 
 
-@app.get("/condwafee", tags=["水费操作"], summary="查询水费（pc端）")
+@app.get("/condwafee", tags=["水费操作", 'PC', '水费操作/PC'], summary="查询水费（pc端）")
 async def condwafee(page_index: int, utele: str = Query(None, min_length=0), wdate: str = Query(None, min_length=0),
                     wpay: str = Query(None, min_length=0)):
     json = []
@@ -267,7 +267,7 @@ async def condwafee(page_index: int, utele: str = Query(None, min_length=0), wda
     return jsondata2
 
 
-@app.post("/delwafee", tags=["水费操作"], summary="删除水费（pc端）")
+@app.post("/delwafee", tags=["水费操作", 'PC', '水费操作/PC'], summary="删除水费（pc端）")
 async def delwafee(arg: final_back_postmodel.WaFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.WaterFees).filter(
         final_back_sqlmodel.WaterFees.wa_id == arg.wfid).delete()
@@ -275,7 +275,7 @@ async def delwafee(arg: final_back_postmodel.WaFree):
     return json.loads('{"code":"0","msg":"删除成功"}')
 
 
-@app.post("/paywafee", tags=["水费操作"], summary="交纳水费（app端）")
+@app.post("/paywafee", tags=["水费操作", 'app', '水费操作/app'], summary="交纳水费（app端）")
 async def paywafee(arg: final_back_postmodel.WaFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.WaterFees).filter(
         final_back_sqlmodel.WaterFees.wa_id == arg.wfid).update(
@@ -285,7 +285,7 @@ async def paywafee(arg: final_back_postmodel.WaFree):
     return json.loads('{"msg":"交费成功"}')
 
 
-@app.get("/condelfee", tags=["电费操作"], summary="查询电费（pc端）")
+@app.get("/condelfee", tags=["电费操作", 'PC', '电费操作/PC'], summary="查询电费（pc端）")
 async def condelfee(page_index: int, utele: str = Query(None, min_length=0), edate: str = Query(None, min_length=0),
                     wpay: str = Query(None, min_length=0)):
     json = []
@@ -333,7 +333,7 @@ async def condelfee(page_index: int, utele: str = Query(None, min_length=0), eda
     return jsondata2
 
 
-@app.post("/addelfee", tags=["电费操作"], summary="录入电费（pc端）")
+@app.post("/addelfee", tags=["电费操作", 'PC', '电费操作/PC'], summary="录入电费（pc端）")
 async def addelfee(ard: final_back_postmodel.UserLive, args: final_back_postmodel.EleFree):
     a = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == ard.utele).all()
@@ -360,7 +360,7 @@ async def addelfee(ard: final_back_postmodel.UserLive, args: final_back_postmode
             return json.loads('{"code":"1","msg":"此账号审核未通过"}')
 
 
-@app.post("/updelfee", tags=["电费操作"], summary="修改电费（pc端）")
+@app.post("/updelfee", tags=["电费操作", 'PC', '电费操作/PC'], summary="修改电费（pc端）")
 async def updelfee(args: final_back_postmodel.EleFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.ElectricityFees).filter(
         final_back_sqlmodel.ElectricityFees.ef_id == args.efid).update(
@@ -369,7 +369,7 @@ async def updelfee(args: final_back_postmodel.EleFree):
     return json.loads('{"code":"0","msg":"修改成功"}')
 
 
-@app.post("/deelfee", tags=["电费操作"], summary="删除电费（pc端）")
+@app.post("/deelfee", tags=["电费操作", 'PC', '电费操作/PC'], summary="删除电费（pc端）")
 async def delelfee(arg: final_back_postmodel.EleFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.ElectricityFees).filter(
         final_back_sqlmodel.ElectricityFees.ef_id == arg.efid).delete()
@@ -377,7 +377,7 @@ async def delelfee(arg: final_back_postmodel.EleFree):
     return json.loads('{"code":"0","msg":"删除成功"}')
 
 
-@app.get("/appcondwafee", tags=["水费操作"], summary="查询水费（app端）")
+@app.get("/appcondwafee", tags=["水费操作", 'app', '水费操作/app'], summary="查询水费（app端）")
 async def appcondwafee(utele: str, wpay: str = None):
     json = []
     jsondata2 = {}
@@ -421,7 +421,7 @@ async def appcondwafee(utele: str, wpay: str = None):
     return jsondata2
 
 
-@app.get("/appcondelfee", tags=["电费操作"], summary="查询电费（app端）")
+@app.get("/appcondelfee", tags=["电费操作", 'app', '水费操作/app'], summary="查询电费（app端）")
 async def appcondelfee(utele: str, wpay: str = None):
     json = []
     jsondata2 = {}
@@ -465,7 +465,7 @@ async def appcondelfee(utele: str, wpay: str = None):
     return jsondata2
 
 
-@app.post("/payelfee", tags=["电费操作"], summary="交纳电费（app端）")
+@app.post("/payelfee", tags=["电费操作", 'app', '水费操作/app'], summary="交纳电费（app端）")
 async def payelfee(arg: final_back_postmodel.EleFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.ElectricityFees).filter(
         final_back_sqlmodel.ElectricityFees.ef_id == arg.efid).update(
@@ -475,7 +475,7 @@ async def payelfee(arg: final_back_postmodel.EleFree):
     return json.loads('{"msg":"交费成功"}')
 
 
-@app.get("/appcondprfee", tags=["物业费操作"], summary="查询物业费（app端）")
+@app.get("/appcondprfee", tags=["物业费操作", 'app', '物业费操作/app'], summary="查询物业费（app端）")
 async def appcondprfee(utele: str, wpay: str = None):
     json = []
     jsondata2 = {}
@@ -519,7 +519,7 @@ async def appcondprfee(utele: str, wpay: str = None):
     return jsondata2
 
 
-@app.get("/condprfee", tags=["物业费操作"], summary="查询物业费（pc端）")
+@app.get("/condprfee", tags=["物业费操作", 'PC', '物业费操作/PC'], summary="查询物业费（pc端）")
 async def condprfee(page_index: int, utele: str = Query(None, min_length=0), pdate: str = Query(None, min_length=0),
                     wpay: str = Query(None, min_length=0)):
     json = []
@@ -568,7 +568,7 @@ async def condprfee(page_index: int, utele: str = Query(None, min_length=0), pda
     return jsondata2
 
 
-@app.post("/addprfee", tags=["物业费操作"], summary="录入物业费（pc端）")
+@app.post("/addprfee", tags=["物业费操作", 'PC', '物业费操作/PC'], summary="录入物业费（pc端）")
 async def addprfee(args: final_back_postmodel.PrFree, ard: final_back_postmodel.UserLive):
     a = final_back_sqlmodel.session.query(final_back_sqlmodel.UserLive).filter(
         final_back_sqlmodel.UserLive.user_tele == ard.utele).all()
@@ -594,14 +594,14 @@ async def addprfee(args: final_back_postmodel.PrFree, ard: final_back_postmodel.
             return json.loads('{"code":"1","msg":"此账号审核未通过"}')
 
 
-@app.post("/updprfee", tags=["物业费操作"], summary="修改物业费（pc端）")
+@app.post("/updprfee", tags=["物业费操作", 'PC', '物业费操作/PC'], summary="修改物业费（pc端）")
 async def upprfee(arg: final_back_postmodel.PrFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.PropertyFees).filter(
         final_back_sqlmodel.PropertyFees.pr_id == arg.pfid).delete()
     final_back_sqlmodel.session.commit()
 
 
-@app.post("/payprfee", tags=["物业费操作"], summary="交纳物业费（app端）")
+@app.post("/payprfee", tags=["物业费操作", 'app', '物业费操作/app'], summary="交纳物业费（app端）")
 async def payprfee(arg: final_back_postmodel.PrFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.PropertyFees).filter(
         final_back_sqlmodel.PropertyFees.pr_id == arg.pfid).update(
@@ -611,7 +611,7 @@ async def payprfee(arg: final_back_postmodel.PrFree):
     return json.loads('{"msg":"交费成功"}')
 
 
-@app.post("/delprfee", tags=["物业费操作"], summary="删除物业费（pc端）")
+@app.post("/delprfee", tags=["物业费操作", 'PC', '物业费操作/PC'], summary="删除物业费（pc端）")
 async def delprfee(arg: final_back_postmodel.PrFree):
     final_back_sqlmodel.session.query(final_back_sqlmodel.PropertyFees).filter(
         final_back_sqlmodel.PropertyFees.pr_id == arg.pfid).delete()
@@ -619,7 +619,7 @@ async def delprfee(arg: final_back_postmodel.PrFree):
     return json.loads('{"code":"0","msg":"删除成功"}')
 
 
-@app.get("/selectnouse", tags=["停车位操作"], summary="查询未用车位")
+@app.get("/selectnouse", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="查询未用车位")
 async def selectnouse(page_index: int):
     num = final_back_sqlmodel.session.query(final_back_sqlmodel.Parking).filter(
         final_back_sqlmodel.Parking.is_used == 0).order_by(
@@ -632,7 +632,7 @@ async def selectnouse(page_index: int):
     return jsondata
 
 
-@app.get("/selectaluse", tags=["停车位操作"], summary="查询已用车位")
+@app.get("/selectaluse", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="查询已用车位")
 async def selectaluse(page_index: int):
     datanum = []
     num = final_back_sqlmodel.session.query(final_back_sqlmodel.Parking.pa_id, final_back_sqlmodel.Parking.pa_fooler,
@@ -663,7 +663,7 @@ async def selectaluse(page_index: int):
     return jsondata
 
 
-@app.get("/selectchange", tags=["停车位操作"], summary="查询停车位单价")
+@app.get("/selectchange", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="查询停车位单价")
 async def selectchange():
     data = final_back_sqlmodel.session.query(final_back_sqlmodel.ChargingStandard.cs_standard).filter(
         final_back_sqlmodel.ChargingStandard.cs_kind == "停车费").all()
@@ -671,7 +671,7 @@ async def selectchange():
     return data
 
 
-@app.get("/selecthistory", tags=["停车位操作"], summary="查询停车位历史")
+@app.get("/selecthistory", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="查询停车位历史")
 async def selectchange(page_index: int):
     data = final_back_sqlmodel.session.query(final_back_sqlmodel.ParkingFees).filter(
         final_back_sqlmodel.ParkingFees.pf_money.isnot(None)).limit(6).offset((page_index - 1) * 6).all()
@@ -683,7 +683,7 @@ async def selectchange(page_index: int):
     return jsondata
 
 
-@app.post("/usepaking", tags=["停车位操作"], summary="使用车位")
+@app.post("/usepaking", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="使用车位")
 async def usepaking(ard: final_back_postmodel.Pakingfee):
     final_back_sqlmodel.session.query(final_back_sqlmodel.Parking).filter(
         final_back_sqlmodel.Parking.pa_id == ard.paid).update({final_back_sqlmodel.Parking.is_used: 1})
@@ -695,14 +695,14 @@ async def usepaking(ard: final_back_postmodel.Pakingfee):
     return json.loads('{"code":"0","msg":"停车位使用成功"}')
 
 
-@app.post("/addpaking", tags=["停车位操作"], summary="添加车位")
+@app.post("/addpaking", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="添加车位")
 async def addpaking(ard: final_back_postmodel.Paking):
     final_back_sqlmodel.session.add(final_back_sqlmodel.Parking(pa_fooler=ard.pa_fooler, is_used=0))
     final_back_sqlmodel.session.commit()
     return json.loads('{"code":"0","msg":"停车位使用成功"}')
 
 
-@app.post("/stopparking", tags=["停车位操作"], summary="结束用车位")
+@app.post("/stopparking", tags=["停车位操作", 'PC', '停车位操作/PC'], summary="结束用车位")
 async def stopparking(ard: final_back_postmodel.Pakingfee):
     final_back_sqlmodel.session.query(final_back_sqlmodel.Parking).filter(
         final_back_sqlmodel.Parking.pa_id == ard.paid).update({final_back_sqlmodel.Parking.is_used: 0})
@@ -714,7 +714,7 @@ async def stopparking(ard: final_back_postmodel.Pakingfee):
     return json.loads('{"code":"0","msg":"缴费成功"}')
 
 
-@app.get("/pushfee", tags=["杂项数据"], summary="催缴费用")
+@app.get("/pushfee", tags=["杂项数据", 'PC', '杂项数据/PC'], summary="催缴费用")
 async def pushfee(fid: str, tele: int, feekind: str, money: str):
     client = smslicent.ZhenziSmsClient('https://sms_developer.zhenzikj.com', "108024",
                                        "3874ba7b-fe47-46bd-b362-b18f6ef92b2d")
@@ -735,7 +735,7 @@ async def pushfee(fid: str, tele: int, feekind: str, money: str):
         return json.loads('{"code":"0","msg":"催缴费用成功"}')
 
 
-@app.get("/carddata", tags=["杂项数据"], summary="卡片数据展示")
+@app.get("/carddata", tags=["杂项数据", 'PC', '杂项数据/PC'], summary="卡片数据展示")
 async def carddata():
     elfee_pass = final_back_sqlmodel.session.query(final_back_sqlmodel.ElectricityFees).filter(
         final_back_sqlmodel.ElectricityFees.ef_pay == "1").count()
@@ -770,7 +770,7 @@ async def carddata():
     return jsondata
 
 
-@app.get("/chartdata", tags=["杂项数据"], summary="折线统计图数据展示")
+@app.get("/chartdata", tags=["杂项数据", 'PC', '杂项数据/PC'], summary="折线统计图数据展示")
 async def chartdata():
     INSPECT_MONTH = 6
     output = []
@@ -823,7 +823,7 @@ async def chartdata():
     return output
 
 
-@app.get("/thatchart", tags=["杂项数据"], summary="柱形统计图数据展示")
+@app.get("/thatchart", tags=["杂项数据", 'PC', '杂项数据/PC'], summary="柱形统计图数据展示")
 async def thatchart():
     waterall = final_back_sqlmodel.session.query(
         final_back_sqlmodel.func.sum(final_back_sqlmodel.WaterFees.wa_hadpay).label("count")).all()
@@ -846,13 +846,13 @@ async def thatchart():
     return jsondata
 
 
-@app.get("/selectcs", tags=["系统设置"], summary="查询数据单价")
+@app.get("/selectcs", tags=["系统设置", 'PC', '系统设置/PC'], summary="查询数据单价")
 async def selectcs():
     jsondata = final_back_sqlmodel.session.query(final_back_sqlmodel.ChargingStandard).all()
     return jsondata
 
 
-@app.post("/insertcs", tags=["系统设置"], summary="插入默认数据单价")
+@app.post("/insertcs", tags=["系统设置", 'PC', '系统设置/PC'], summary="插入默认数据单价")
 async def insertcs():
     TestData = ['水费', '电费', '物业费', '停车费']
     for item in TestData:
@@ -861,7 +861,7 @@ async def insertcs():
     return json.loads('{"code":"0","msg":"数据添加成功"}')
 
 
-@app.get("/updatecs", tags=["系统设置"], summary="修改默认数据单价")
+@app.get("/updatecs", tags=["系统设置", 'PC', '系统设置/PC'], summary="修改默认数据单价")
 async def updatecs(cswater: int, csele: int, cspr: int, csparking: int):
     TestData = ['水费', '电费', '物业费', '停车费']
     RealData = [cswater, csele, cspr, csparking]
