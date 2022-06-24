@@ -31,8 +31,10 @@ def try_rollback(func):
     def wrapper():
         try:
             func()
+            time.sleep(5)
         except:
             db_sql.session.rollback()
+            time.sleep(5)
     return wrapper
 
 
@@ -106,7 +108,7 @@ async def userlogin(username: int, pwd: str):
 
 
 @try_rollback
-@app.get("/pclogin", tags=['PC', '用户/app'], summary="后台管理员登录/PC")
+@app.get("/pclogin", tags=['PC', '用户/PC'], summary="后台管理员登录/PC")
 async def pclogin(username: str, password: str):
     data = db_sql.session.query(db_sql.UserLogin).filter(
         db_sql.UserLogin.username == username).all()
@@ -140,7 +142,7 @@ async def addliver(args: final_back_postmodel.UserLive):
 
 
 @try_rollback
-@app.post("/delliver", tags=["用户", 'PC', '用户/PC'], summary="删除用户/PC")
+@app.post("/delliver", tags=["PC", '用户/PC'], summary="删除用户/PC")
 async def delliver(item: final_back_postmodel.UserLive):
     db_sql.session.query(db_sql.UserLive).filter(
         db_sql.UserLive.user_tele == item.utele).delete()
